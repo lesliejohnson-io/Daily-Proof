@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Proof</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="manifest" href="/static/manifest.webmanifest">
+    <meta name="theme-color" content="#0b1022">
+    <meta name="mobile-web-app-capable" content="yes">
+</head>
+<script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/static/sw.js");
+    }
+</script>
+  
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🪴 Daily Proof</h1>
+            <p>Build trust with yourself, one day at a time.</p>
+        </div>
+        
+        <div class="card">
+            <div class="date-display" id="dateDisplay"></div>
+            
+            <div class="tasks-section">
+                <h2>Today's Commitments</h2>
+                <div id="tasksList"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="stats-section" id="statsSection"></div>
+        </div>
+        
+        <div class="card">
+            <div class="heatmap-section">
+                <h2>Your Consistency Journey</h2>
+                <div class="month-labels" id="monthLabels"></div>
+                <div class="heatmap-container">
+                    <div class="heatmap" id="heatmap"></div>
+                </div>
+                <div class="legend">
+                    <span>Less</span>
+                    <div class="legend-item" style="background: #1f1f2e;"></div>
+                    <div class="legend-item" style="background: #1a4a4d;"></div>
+                    <div class="legend-item" style="background: #2e8b99;"></div>
+                    <div class="legend-item" style="background: #5ce1e6;"></div>
+                    <span>More</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+    <div class="save-indicator" id="saveIndicator">Saved ✓</div>
+    
+    <script src="/static/app.js"></script>
+</body>
+</html>
