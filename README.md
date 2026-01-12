@@ -1,13 +1,14 @@
 # 🪴Daily Proof 
-![Python](https://img.shields.io/badge/Python-3.11+-blue)
-![Flask](https://img.shields.io/badge/Flask-3.x-black)
-![Gunicorn](https://img.shields.io/badge/Gunicorn-Production%20Server-brightgreen)
-![PWA Ready](https://img.shields.io/badge/PWA-Ready-purple)
+![Python](https://img.shields.io/badge/Python-3.11+-004AAD?style=flat&logo=python&logoColor=ffffff)
+![Flask](https://img.shields.io/badge/Flask-API-6B7280?style=flat&logo=flask&logoColor=ffffff)
+![Gunicorn](https://img.shields.io/badge/Gunicorn-Prod%20Server-16A34A?style=flat&logo=gunicorn&logoColor=ffffff)
+![PWA Ready](https://img.shields.io/badge/PWA-Ready-purple?style=flat&logo=pwa&logoColor=ffffff)
 ![License](https://img.shields.io/badge/License-MIT-informational)
 
-A self-trust task tracker that helps you build confidence by keeping promises to yourself — one day at a time.
 
-Daily Proof is a lightweight “commit + complete” tracker that visualizes your consistency using a **daily commitments checklist** and an **activity heatmap** (like GitHub contributions).
+A task tracker that helps you build self-trust by keeping promises to yourself each day.
+
+Daily Proof is a lightweight “commit + complete” tracker that visualizes your consistency using a **daily commitments checklist** and an **activity heatmap**.
 
 ---
 
@@ -20,6 +21,12 @@ Daily Proof creates that evidence by helping you:
 - visually track consistency over time
 - reduce overwhelm by keeping the system simple
 
+---
+## Screenshot
+
+<p align="center">
+  <img src="screenshot.png" alt="Daily Proof UI" width="420">
+</p>
 ---
 
 ## Features
