@@ -1,0 +1,59 @@
+{
+  "2026-01-10": {
+    "tasks": [
+      {
+        "completed": true,
+        "id": 1,
+        "text": "something here"
+      },
+      {
+        "completed": true,
+        "id": 2,
+        "text": "something else"
+      },
+      {
+        "completed": true,
+        "id": 3,
+        "text": "something 3"
+      }
+    ]
+  },
+  "2026-01-11": {
+    "tasks": [
+      {
+        "completed": true,
+        "id": 1,
+        "text": "something here"
+      },
+      {
+        "completed": true,
+        "id": 2,
+        "text": "something else"
+      },
+      {
+        "completed": true,
+        "id": 3,
+        "text": "something 3"
+      }
+    ]
+  },
+  "2026-01-12": {
+    "tasks": [
+      {
+        "completed": true,
+        "id": 1,
+        "text": "Voice AI agents with RAG and Supabase in Udemy course"
+      },
+      {
+        "completed": true,
+        "id": 2,
+        "text": "Print out speech, markup language, add movements, list questions"
+      },
+      {
+        "completed": false,
+        "id": 3,
+        "text": "Walk or Peloton, add some upperbody lifting (Peloton app)"
+      }
+    ]
+  }
+}
