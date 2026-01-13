@@ -1,4 +1,4 @@
-# 🪴Daily Proof 
+# 🎯Daily Proof 
 ![Python](https://img.shields.io/badge/Python-3.11+-004AAD?style=flat&logo=python&logoColor=ffffff)
 ![Flask](https://img.shields.io/badge/Flask-API-6B7280?style=flat&logo=flask&logoColor=ffffff)
 ![Gunicorn](https://img.shields.io/badge/Gunicorn-Prod%20Server-16A34A?style=flat&logo=gunicorn&logoColor=ffffff)

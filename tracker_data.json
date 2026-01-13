@@ -42,17 +42,17 @@
       {
         "completed": false,
         "id": 1,
-        "text": ""
+        "text": "Run 3 miles with weighted vest"
       },
       {
         "completed": true,
         "id": 2,
-        "text": "Task 2"
+        "text": "Build heat map for tracker"
       },
       {
         "completed": true,
         "id": 3,
-        "text": "Task 3"
+        "text": "Deploy Daily Proof app "
       }
     ]
   }
