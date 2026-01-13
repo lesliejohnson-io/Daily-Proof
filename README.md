@@ -30,19 +30,20 @@ Daily Proof creates that evidence by helping you:
 ---
 
 ## Features
-- ✅ **Daily Commitments** checklist
-- 🔥 **Heatmap** showing completion intensity by day
-- 🧠 Designed to reinforce **self-trust + consistency**
-- 💾 Data saved locally on the server (`tracker_data.json`)
-- 📱 Mobile-friendly UI (PWA-ready)
+- ✅ **Daily Commitments** (3 task slots)
+- ✅ **Heatmap visualization** that updates immediately when tasks are completed
+- ✅ **Timezone-safe date handling** so “today” always maps correctly
+- ✅ **Streaks + stats** (current streak, longest streak, perfect days)
+- ✅ **PWA installable** (Android-ready)
+- ✅ Helpful feedback: checking a blank task shows: **“Add a commitment to make it count.”**
 
 ---
 
 ## Tech Stack
-- **Flask (Python)** for routing + API endpoints
-- **HTML/CSS/Vanilla JS** frontend
-- JSON persistence (`tracker_data.json`)
-- Deployment-ready for **Render** using Gunicorn
+- **Backend:** Python + Flask
+- **Frontend:** Vanilla JS + HTML + CSS
+- **Storage:** JSON file (`tracker_data.json`)
+- **Hosting:** Render
 
 ---
 
@@ -59,3 +60,4 @@ Daily-Proof/
     ├── manifest.webmanifest      # (optional) for PWA
     ├── sw.js                     # (optional) for PWA
     └── icons/                    # (optional) app icons
+    │   └── icon-512-maskable.png
