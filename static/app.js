@@ -1,6 +1,18 @@
 let tasks = [];
 let saveTimeout = null;
 
+function getLocalISODate(date = new Date()) {
+    const d = new Date(date);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 10); // "YYYY-MM-DD" in LOCAL time
+  }
+  
+  function parseYMDLocal(ymd) {
+    // Treat "YYYY-MM-DD" as local midnight (not UTC)
+    return new Date(`${ymd}T00:00:00`);
+  }
+  
+
 // Display current date
 function updateDateDisplay() {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -106,116 +118,130 @@ async function loadHeatmap() {
     }
 }
 
-// Render heat map
 function renderHeatmap(data) {
     console.log('Starting renderHeatmap with', data.length, 'days');
     const heatmap = document.getElementById('heatmap');
     const monthLabels = document.getElementById('monthLabels');
     heatmap.innerHTML = '';
     monthLabels.innerHTML = '';
-    
+  
     // Define colors
     const levelColors = {
-        0: '#1f1f2e',
-        1: '#1a4a4d',
-        2: '#2e8b99',
-        3: '#5ce1e6'
+      0: '#1f1f2e',
+      1: '#1a4a4d',
+      2: '#2e8b99',
+      3: '#5ce1e6'
     };
-    
-    // Group data by weeks
+  
+    // -----------------------------
+    // Group data by weeks (LOCAL-safe)
+    // -----------------------------
     const weeks = [];
     let currentWeek = [];
-    
+  
     data.forEach((day, index) => {
-        const date = new Date(day.date);
-        const dayOfWeek = date.getDay();
-        
-        if (index === 0) {
-            // Fill in empty cells for the first week
-            for (let i = 0; i < dayOfWeek; i++) {
-                currentWeek.push(null);
-            }
+      const date = parseYMDLocal(day.date);       // ✅ swap
+      const dayOfWeek = date.getDay();            // local day-of-week
+  
+      if (index === 0) {
+        // Fill in empty cells for the first week
+        for (let i = 0; i < dayOfWeek; i++) {
+          currentWeek.push(null);
         }
-        
-        currentWeek.push(day);
-        
-        if (currentWeek.length === 7) {
-            weeks.push(currentWeek);
-            currentWeek = [];
-        }
-    });
-    
-    if (currentWeek.length > 0) {
+      }
+  
+      currentWeek.push(day);
+  
+      if (currentWeek.length === 7) {
         weeks.push(currentWeek);
+        currentWeek = [];
+      }
+    });
+  
+    if (currentWeek.length > 0) {
+      // Pad the last week to 7 cells so columns are consistent
+      while (currentWeek.length < 7) currentWeek.push(null);
+      weeks.push(currentWeek);
     }
-    
+  
+    // -----------------------------
     // Render cells
-    const todayStr = new Date().toISOString().split('T')[0];
+    // -----------------------------
+    const todayStr = getLocalISODate();
     console.log('Today is:', todayStr);
     let cellCount = 0;
-    
-    weeks.forEach(week => {
-        week.forEach(day => {
-            const cell = document.createElement('div');
-            cell.className = 'heatmap-cell';
-            
-            if (day) {
-                cell.setAttribute('data-level', day.level);
-                cell.setAttribute('data-date', day.date);
-                
-                // Set background color inline - THIS IS KEY!
-                cell.style.background = levelColors[day.level];
-                
-                // Mark today's cell
-                if (day.date === todayStr) {
-                    cell.setAttribute('data-today', 'true');
-                    cell.style.border = '1px solid white';
-                    cell.style.boxSizing = 'border-box';
-                    console.log('Today cell:', day.date, 'level:', day.level);
-                }
-                
-                cell.addEventListener('mouseenter', (e) => {
-                    showTooltip(e, day);
-                });
-                
-                cell.addEventListener('mouseleave', () => {
-                    hideTooltip();
-                });
-                cellCount++;
-            } else {
-                cell.style.background = 'transparent';
-            }
-            
-            heatmap.appendChild(cell);
-        });
-    });
-    console.log('Rendered', cellCount, 'heatmap cells');
-    
-    // Add month labels
-    const months = [];
-    let currentMonth = '';
-    
-    data.forEach((day, index) => {
-        const date = new Date(day.date);
-        const month = date.toLocaleDateString('en-US', { month: 'short' });
-        
-        if (month !== currentMonth && index % 7 === 0) {
-            months.push({ month, index: Math.floor(index / 7) });
-            currentMonth = month;
+  
+    weeks.forEach((week) => {
+      week.forEach((day) => {
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell';
+  
+        if (day) {
+          cell.setAttribute('data-level', day.level);
+          cell.setAttribute('data-date', day.date);
+  
+          // Paint cell
+          cell.style.background = levelColors[day.level];
+  
+          // Mark today's cell (1px border)
+          if (day.date === todayStr) {
+            cell.setAttribute('data-today', 'true');
+            cell.style.border = '1px solid white';
+            cell.style.boxSizing = 'border-box';
+            console.log('Today cell:', day.date, 'level:', day.level);
+          }
+  
+          cell.addEventListener('mouseenter', (e) => showTooltip(e, day));
+          cell.addEventListener('mouseleave', hideTooltip);
+  
+          cellCount++;
+        } else {
+          cell.style.background = 'transparent';
         }
+  
+        heatmap.appendChild(cell);
+      });
     });
-    
-    months.forEach(m => {
-        const label = document.createElement('span');
-        label.textContent = m.month;
-        monthLabels.appendChild(label);
+  
+    console.log('Rendered', cellCount, 'heatmap cells');
+  
+    // -----------------------------
+    // Month labels (improved placement)
+    // Align labels to week columns, not raw data indices.
+    // This accounts for the null padding at the start of the first week.
+    // -----------------------------
+    monthLabels.style.display = 'grid';
+    monthLabels.style.gridTemplateColumns = `repeat(${weeks.length}, 1fr)`;
+  
+    let currentMonth = '';
+    const monthMarkers = [];
+  
+    weeks.forEach((week, weekIndex) => {
+      const firstDayInWeek = week.find(d => d !== null);
+      if (!firstDayInWeek) return;
+  
+      const date = parseYMDLocal(firstDayInWeek.date); // ✅ swap
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+  
+      if (month !== currentMonth) {
+        monthMarkers.push({ month, weekIndex });
+        currentMonth = month;
+      }
     });
-}
+  
+    monthMarkers.forEach(({ month, weekIndex }) => {
+      const label = document.createElement('span');
+      label.textContent = month;
+      label.style.gridColumn = `${weekIndex + 1}`; // place at the correct week column
+      monthLabels.appendChild(label);
+    });
+  }
+  
 
 // Show tooltip
 function showTooltip(event, day) {
     const tooltip = document.getElementById('tooltip');
-    const date = new Date(day.date);
+    const date = parseYMDLocal(day.date);
     const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     
     const levelText = ['No tasks', '1 task completed', '2 tasks completed', '3 tasks completed'];
