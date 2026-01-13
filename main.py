@@ -106,19 +106,21 @@ def service_worker():
 # -----------------------------------------------------------------------------
 @app.route("/api/tasks", methods=["GET"])
 def get_tasks():
-    """Get tasks for today (creates today's record if missing)."""
+    """Get tasks for a given date (defaults to server today). Creates record if missing."""
     data = load_data()
-    today = get_today_str()
 
-    if today not in data or not isinstance(data.get(today), dict):
-        data[today] = default_day_payload()
+    # NEW: accept client-local date via query string
+    date_str = request.args.get("date") or get_today_str()
+
+    if date_str not in data or not isinstance(data.get(date_str), dict):
+        data[date_str] = default_day_payload()
         save_data(data)
 
     # Ensure structure is present even if old data is missing fields
-    day = data[today]
+    day = data[date_str]
     if "tasks" not in day or not isinstance(day.get("tasks"), list):
         day["tasks"] = default_day_payload()["tasks"]
-        data[today] = day
+        data[date_str] = day
         save_data(data)
 
     return jsonify(day)
@@ -126,15 +128,18 @@ def get_tasks():
 
 @app.route("/api/tasks", methods=["POST"])
 def update_tasks():
-    """Update tasks for today."""
+    """Update tasks for a given date (defaults to server today)."""
     payload = request.get_json(silent=True) or {}
+
+    # NEW: accept client-local date in body
+    date_str = payload.get("date") or get_today_str()
+
     tasks = payload.get("tasks", [])
     if not isinstance(tasks, list):
         tasks = []
 
-    data = load_data()
-    today = get_today_str()
-    data[today] = {"tasks": tasks}
+    data = load_data()  # <-- THIS was missing
+    data[date_str] = {"tasks": tasks}
     save_data(data)
 
     return jsonify({"success": True})

@@ -23,7 +23,7 @@ function updateDateDisplay() {
 // Load tasks from server
 async function loadTasks() {
     try {
-        const response = await fetch('/api/tasks');
+        const response = await fetch(`/api/tasks?date=${getLocalISODate()}`);
         const data = await response.json();
         tasks = data.tasks;
         renderTasks();
@@ -41,7 +41,7 @@ async function saveTasks() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ tasks })
+            body: JSON.stringify({ date: getLocalISODate(), tasks })
         });
         
         console.log('Tasks saved, reloading heatmap and stats...');
