@@ -224,6 +224,43 @@ body {
     opacity: 1;
 }
 
+.toast {
+    position: fixed;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #062b2e;
+    background: #5ce1e6; /* cyan */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-2px);
+    transition: opacity 160ms ease, transform 160ms ease;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  
+  .toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* little pointer arrow */
+  .toast::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #5ce1e6;
+    transform: rotate(45deg);
+    left: -5px;
+    top: 50%;
+    margin-top: -5px;
+    box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.08);
+  }
+  
+  
 .month-labels {
     display: flex;
     justify-content: space-between;

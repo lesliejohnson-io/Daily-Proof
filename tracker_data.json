@@ -40,9 +40,9 @@
   "2026-01-12": {
     "tasks": [
       {
-        "completed": true,
+        "completed": false,
         "id": 1,
-        "text": "Task 1"
+        "text": ""
       },
       {
         "completed": true,
@@ -50,7 +50,7 @@
         "text": "Task 2"
       },
       {
-        "completed": false,
+        "completed": true,
         "id": 3,
         "text": "Task 3"
       }

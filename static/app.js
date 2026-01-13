@@ -20,6 +20,7 @@ function updateDateDisplay() {
     document.getElementById('dateDisplay').textContent = today;
 }
 
+
 // Load tasks from server
 async function loadTasks() {
     try {
@@ -69,6 +70,59 @@ function showSaveIndicator() {
     }, 2000);
 }
 
+// Show toast message
+function showToast(message, anchorEl) {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+
+    toast.textContent = message;
+
+    // Position near the checkbox that triggered it
+    const rect = anchorEl.getBoundingClientRect();
+
+    // Default: to the RIGHT of checkbox
+    const padding = 10;
+    let left = rect.right + padding;
+    let top = rect.top + rect.height / 2;
+
+    // Account for toast dimensions (needs to be visible to measure)
+    toast.style.left = "0px";
+    toast.style.top = "0px";
+    toast.classList.add("show");
+
+    const toastRect = toast.getBoundingClientRect();
+
+    // Center vertically with the checkbox
+    top = top - toastRect.height / 2;
+
+    // Prevent going off screen (right edge)
+    if (left + toastRect.width > window.innerWidth - 12) {
+        // Move to LEFT side if not enough space
+        left = rect.left - toastRect.width - padding;
+
+        // Move arrow to the right side
+        toast.style.setProperty("--arrow-left", "auto");
+    }
+
+    // Prevent going off screen (top/bottom)
+    top = Math.max(12, Math.min(top, window.innerHeight - toastRect.height - 12));
+
+    toast.style.left = `${left}px`;
+    toast.style.top = `${top}px`;
+
+    // Auto hide
+    clearTimeout(window.__toastTimeout);
+    window.__toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2200);
+}
+
+// Hide toast when clicking anywhere on the page
+document.addEventListener("click", () => {
+    const toast = document.getElementById("toast");
+    if (toast) toast.classList.remove("show");
+});
+
 // Render tasks
 function renderTasks() {
     const tasksList = document.getElementById('tasksList');
@@ -83,10 +137,21 @@ function renderTasks() {
         checkbox.className = 'task-checkbox';
         checkbox.checked = task.completed;
         checkbox.addEventListener('change', (e) => {
+            const text = (tasks[index].text || "").trim();
+        
+            // If user tries to check a blank task, prevent it + show message
+            if (!text && e.target.checked) {
+                e.target.checked = false;
+                tasks[index].completed = false;
+                showToast("Add a commitment to make it count.", checkbox);
+                return;
+            }            
+        
             tasks[index].completed = e.target.checked;
             renderTasks();
             saveTasks(); // Immediate save for checkboxes
         });
+        
         
         const input = document.createElement('input');
         input.type = 'text';
@@ -291,6 +356,8 @@ function renderStats(stats) {
         </div>
     `;
 }
+
+
 
 // Initialize
 updateDateDisplay();
