@@ -78,6 +78,10 @@ body {
     flex-shrink: 0;
 }
 
+.task-checkbox:checked {
+    accent-color: #40c463;
+}
+
 .task-checkbox:active {
     accent-color: #5ce1e6;
 }

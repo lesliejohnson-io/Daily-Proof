@@ -125,36 +125,21 @@ document.addEventListener("click", () => {
 
 // Trigger confetti explosion
 function triggerConfetti() {
-    // Create a burst of confetti from both sides
-    const duration = 3000;
-    const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+    // Brand colors: cyan, blue, green
+    const colors = ['#5ce1e6', '#004aad', '#40c463'];
 
-    function randomInRange(min, max) {
-        return Math.random() * (max - min) + min;
-    }
-
-    const interval = setInterval(function() {
-        const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-            return clearInterval(interval);
-        }
-
-        const particleCount = 50 * (timeLeft / duration);
-
-        // Shoot confetti from both sides
-        confetti({
-            ...defaults,
-            particleCount,
-            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-        });
-        confetti({
-            ...defaults,
-            particleCount,
-            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-        });
-    }, 250);
+    // One big explosion from the center
+    confetti({
+        particleCount: 150,
+        spread: 360,
+        startVelocity: 45,
+        decay: 0.9,
+        scalar: 1.4,
+        origin: { x: 0.5, y: 0.5 },
+        colors: colors,
+        ticks: 200,
+        gravity: 1
+    });
 }
 
 // Render tasks
