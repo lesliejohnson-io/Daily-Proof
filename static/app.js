@@ -123,6 +123,40 @@ document.addEventListener("click", () => {
     if (toast) toast.classList.remove("show");
 });
 
+// Trigger confetti explosion
+function triggerConfetti() {
+    // Create a burst of confetti from both sides
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+
+        // Shoot confetti from both sides
+        confetti({
+            ...defaults,
+            particleCount,
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+        });
+        confetti({
+            ...defaults,
+            particleCount,
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+        });
+    }, 250);
+}
+
 // Render tasks
 function renderTasks() {
     const tasksList = document.getElementById('tasksList');
@@ -138,16 +172,28 @@ function renderTasks() {
         checkbox.checked = task.completed;
         checkbox.addEventListener('change', (e) => {
             const text = (tasks[index].text || "").trim();
-        
+
             // If user tries to check a blank task, prevent it + show message
             if (!text && e.target.checked) {
                 e.target.checked = false;
                 tasks[index].completed = false;
                 showToast("Add a commitment to make it count.", checkbox);
                 return;
-            }            
-        
+            }
+
+            // Count completed tasks before this change
+            const completedBefore = tasks.filter(t => t.completed).length;
+
             tasks[index].completed = e.target.checked;
+
+            // Count completed tasks after this change
+            const completedAfter = tasks.filter(t => t.completed).length;
+
+            // Trigger confetti if we just reached 3 completed tasks
+            if (e.target.checked && completedBefore === 2 && completedAfter === 3) {
+                triggerConfetti();
+            }
+
             renderTasks();
             saveTasks(); // Immediate save for checkboxes
         });
