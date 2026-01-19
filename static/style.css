@@ -171,7 +171,7 @@ body {
 .heatmap-cell {
     width: 12px;
     height: 12px;
-    border-radius: 2px;
+    border-radius: 50%;
     background: #1f1f2e;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -195,7 +195,7 @@ body {
 .legend-item {
     width: 12px;
     height: 12px;
-    border-radius: 2px;
+    border-radius: 50%;
 }
 
 .tooltip {
