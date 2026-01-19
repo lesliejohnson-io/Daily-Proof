@@ -71,7 +71,7 @@ function showSaveIndicator() {
 }
 
 // Show toast message
-function showToast(message) {
+function showToast(message, sourceElement = null) {
     const toast = document.getElementById("toast");
     if (!toast) return;
 
@@ -84,7 +84,19 @@ function showToast(message) {
     // Reset state
     toast.classList.remove("show", "hide");
 
-    // Slide in from left
+    // If sourceElement is provided, position toast near it
+    if (sourceElement) {
+        const rect = sourceElement.getBoundingClientRect();
+        // Position toast slightly to the right of the checkbox
+        toast.style.left = `${rect.right + 10}px`;
+        toast.style.top = `${rect.top + window.scrollY}px`;
+    } else {
+        // Default position
+        toast.style.left = '-300px';
+        toast.style.top = '20px';
+    }
+
+    // Slide in
     setTimeout(() => {
         toast.classList.add("show");
     }, 10);
@@ -146,7 +158,7 @@ function renderTasks() {
             if (!text && e.target.checked) {
                 e.target.checked = false;
                 tasks[index].completed = false;
-                showToast("Enter a commitment to make it count");
+                showToast("Enter a commitment to make it count", e.target);
                 return;
             }
 
