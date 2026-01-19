@@ -255,20 +255,19 @@ body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
     opacity: 0;
     pointer-events: none;
-    left: -300px !important;
-    top: 20px !important;
-    transition: left 300ms ease, opacity 300ms ease;
+    transition: transform 300ms ease, opacity 300ms ease;
     z-index: 9999;
     white-space: nowrap;
+    transform: translateX(-20px);
   }
 
   .toast.show {
     opacity: 1;
-    left: 20px !important;
+    transform: translateX(0);
   }
 
   .toast.hide {
-    left: 100vw !important;
+    transform: translateX(calc(100vw));
     opacity: 1;
   }
   
