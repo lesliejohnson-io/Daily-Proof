@@ -71,50 +71,34 @@ function showSaveIndicator() {
 }
 
 // Show toast message
-function showToast(message, anchorEl) {
+function showToast(message) {
     const toast = document.getElementById("toast");
     if (!toast) return;
 
     toast.textContent = message;
 
-    // Position near the checkbox that triggered it
-    const rect = anchorEl.getBoundingClientRect();
-
-    // Default: to the RIGHT of checkbox
-    const padding = 10;
-    let left = rect.right + padding;
-    let top = rect.top + rect.height / 2;
-
-    // Account for toast dimensions (needs to be visible to measure)
-    toast.style.left = "0px";
-    toast.style.top = "0px";
-    toast.classList.add("show");
-
-    const toastRect = toast.getBoundingClientRect();
-
-    // Center vertically with the checkbox
-    top = top - toastRect.height / 2;
-
-    // Prevent going off screen (right edge)
-    if (left + toastRect.width > window.innerWidth - 12) {
-        // Move to LEFT side if not enough space
-        left = rect.left - toastRect.width - padding;
-
-        // Move arrow to the right side
-        toast.style.setProperty("--arrow-left", "auto");
-    }
-
-    // Prevent going off screen (top/bottom)
-    top = Math.max(12, Math.min(top, window.innerHeight - toastRect.height - 12));
-
-    toast.style.left = `${left}px`;
-    toast.style.top = `${top}px`;
-
-    // Auto hide
+    // Clear any existing timeouts
     clearTimeout(window.__toastTimeout);
+    clearTimeout(window.__toastHideTimeout);
+
+    // Reset state
+    toast.classList.remove("show", "hide");
+
+    // Slide in from left
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 10);
+
+    // After 1 second pause, slide out to the right
     window.__toastTimeout = setTimeout(() => {
         toast.classList.remove("show");
-    }, 2200);
+        toast.classList.add("hide");
+    }, 1300);
+
+    // Clean up after animation completes
+    window.__toastHideTimeout = setTimeout(() => {
+        toast.classList.remove("hide");
+    }, 1900);
 }
 
 // Hide toast when clicking anywhere on the page
@@ -162,7 +146,7 @@ function renderTasks() {
             if (!text && e.target.checked) {
                 e.target.checked = false;
                 tasks[index].completed = false;
-                showToast("Add a commitment to make it count.", checkbox);
+                showToast("Enter a commitment to make it count");
                 return;
             }
 
