@@ -76,15 +76,31 @@ body {
     cursor: pointer;
     accent-color: #004aad;
     flex-shrink: 0;
+    border-radius: 50%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 2px solid #004aad;
+    position: relative;
+    transition: all 0.2s ease;
 }
 
 .task-checkbox:checked {
-    accent-color: #40c463;
+    background-color: #40c463;
+    border-color: #40c463;
 }
 
-.task-checkbox:active {
-    accent-color: #5ce1e6;
+.task-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
+
 
 .task-input {
     flex: 1;
@@ -234,34 +250,26 @@ body {
     border-radius: 12px;
     font-size: 13px;
     font-weight: 600;
-    color: #062b2e;
-    background: #5ce1e6; /* cyan */
+    color: white;
+    background: #004aad; /* blue */
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
     opacity: 0;
     pointer-events: none;
-    transform: translateY(-2px);
-    transition: opacity 160ms ease, transform 160ms ease;
+    left: -300px !important;
+    top: 20px !important;
+    transition: left 300ms ease, opacity 300ms ease;
     z-index: 9999;
     white-space: nowrap;
   }
-  
+
   .toast.show {
     opacity: 1;
-    transform: translateY(0);
+    left: 20px !important;
   }
-  
-  /* little pointer arrow */
-  .toast::after {
-    content: "";
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: #5ce1e6;
-    transform: rotate(45deg);
-    left: -5px;
-    top: 50%;
-    margin-top: -5px;
-    box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.08);
+
+  .toast.hide {
+    left: 100vw !important;
+    opacity: 1;
   }
   
   
